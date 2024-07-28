@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, removeFromCart } from "../redux/cart/cartSlice";
 
 const renderStars = (rating) => {
   const fullStars = Math.round(rating);
@@ -31,6 +33,7 @@ const renderStars = (rating) => {
 };
 
 export default function ItemCard({
+  id,
   imageUrl,
   title,
   rating,
@@ -39,6 +42,11 @@ export default function ItemCard({
   category,
   onPress,
 }) {
+  const dispatch = useDispatch();
+  const cartItem = useSelector((state) =>
+    state.cart.find((item) => item.id === id)
+  );
+  const itemQuantity = cartItem ? cartItem.quantity : 0;
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
@@ -55,8 +63,42 @@ export default function ItemCard({
             {renderStars(rating)}
             <Text style={styles.category}> {rateCount}</Text>
           </View>
-
-          <Text style={styles.price}>Rs. {price}</Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text style={styles.price}>Rs. {price}</Text>
+            <View style={styles.counterContainer}>
+              {itemQuantity > 0 && (
+                <View style={styles.counter}>
+                  <TouchableOpacity
+                    onPress={() => dispatch(removeFromCart(id))}
+                    style={styles.counterButton}
+                  >
+                    <Text style={styles.counterButtonText}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.counterText}>{itemQuantity}</Text>
+                  <TouchableOpacity
+                    onPress={() =>
+                      dispatch(
+                        addToCart({
+                          id,
+                          imageUrl,
+                          title,
+                          price,
+                          category,
+                          rating,
+                          rateCount,
+                        })
+                      )
+                    }
+                    style={styles.counterButton}
+                  >
+                    <Text style={styles.counterButtonText}>+</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          </View>
           <Text style={styles.category}>Category: {category}</Text>
         </View>
       </View>
@@ -99,7 +141,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-
+  counterContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  counter: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "grey",
+    borderRadius: 5,
+  },
+  counterButton: {
+    padding: 5,
+  },
+  counterButtonText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  counterText: {
+    paddingHorizontal: 10,
+    fontSize: 18,
+  },
   category: {
     color: "grey",
     fontSize: 16,

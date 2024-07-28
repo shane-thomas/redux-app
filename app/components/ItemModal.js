@@ -2,8 +2,14 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { Image } from "expo-image";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/cart/cartSlice";
 
-export default function ItemModal({ imageUrl, description, onClose }) {
+export default function ItemModal({ id, imageUrl, description, onClose }) {
+  const dispatch = useDispatch();
+  const handleAdd = () => {
+    dispatch(addToCart({ id: id, imageUrl, description }));
+  };
   return (
     <View style={styles.overlay}>
       <View style={styles.container}>
@@ -17,7 +23,7 @@ export default function ItemModal({ imageUrl, description, onClose }) {
           <Text style={[styles.desc, { flex: 2 }]}>{description}</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => {}} style={styles.cartButton}>
+          <TouchableOpacity onPress={handleAdd} style={styles.cartButton}>
             <MaterialIcons name="shopping-cart" color={"white"} size={23} />
             <Text style={styles.cartButtonText}> Add to Cart</Text>
           </TouchableOpacity>
