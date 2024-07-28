@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View, Text } from "react-native";
 import { fetchProducts } from "./api/api";
 import ItemCard from "./components/ItemCard";
 import ItemModal from "./components/ItemModal";
@@ -32,6 +32,9 @@ export default function Page() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Shopping</Text>
+      </View>
       <FlatList
         data={products}
         renderItem={renderItem}
@@ -51,5 +54,15 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  header: {
+    backgroundColor: "#80d9e1",
+    padding: 15,
+  },
+  headerText: {
+    color: "black",
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
