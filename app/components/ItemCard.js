@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { MaterialIcons } from "@expo/vector-icons";
 
@@ -37,28 +37,30 @@ export default function ItemCard({
   rateCount,
   price,
   category,
-  description,
+  onPress,
 }) {
   return (
-    <View style={styles.container}>
-      <Image
-        source={{ uri: imageUrl }}
-        style={styles.image}
-        contentFit="contain"
-      />
-      <View style={styles.content}>
-        <Text style={styles.title} numberOfLines={2}>
-          {title}
-        </Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          {renderStars(rating)}
-          <Text style={styles.category}> {rateCount}</Text>
-        </View>
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.container}>
+        <Image
+          source={{ uri: imageUrl }}
+          style={styles.image}
+          contentFit="contain"
+        />
+        <View style={styles.content}>
+          <Text style={styles.title} numberOfLines={2}>
+            {title}
+          </Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            {renderStars(rating)}
+            <Text style={styles.category}> {rateCount}</Text>
+          </View>
 
-        <Text style={styles.price}>Rs. {price}</Text>
-        <Text style={styles.category}>Category: {category}</Text>
+          <Text style={styles.price}>Rs. {price}</Text>
+          <Text style={styles.category}>Category: {category}</Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -70,8 +72,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 5,
     height: 175,
-    // alignItems: "center",
-    // justifyContent:"space-between",
+    width: "95%",
+    alignSelf: "center",
     marginVertical: 10,
   },
   image: {
@@ -88,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   content: {
-    flex:1,
+    flex: 1,
     flexDirection: "column",
     padding: 10,
     justifyContent: "space-between",
